@@ -12,6 +12,7 @@ func main() {
 
 	r.HandleFunc("/", indexHandler).Methods("GET")
 	r.HandleFunc("/download", downloadFileHandler).Methods("GET")
+	r.HandleFunc("/upload", uploadFileHandler).Methods("POST")
 	srv := &http.Server{
 		Handler: r,
 		Addr:    ":8080",

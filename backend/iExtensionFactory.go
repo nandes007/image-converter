@@ -7,10 +7,10 @@ type iConverterFactory interface {
 }
 
 func convertImage(extensionType string) (iConverterFactory, error) {
-	if extensionType == "png" {
+	if extensionType == ".png" {
 		return &pngImage{}, nil
 	}
-	if extensionType == "jpeg" {
+	if extensionType == ".jpeg" {
 		return &jpegImage{}, nil
 	}
 	return nil, fmt.Errorf("wrong extension type passed")
