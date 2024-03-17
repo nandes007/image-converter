@@ -1,32 +1,53 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"os"
 	"path/filepath"
-
-	"github.com/nandes007/image-converter/helper"
 )
 
 func downloadFileHandler(w http.ResponseWriter, r *http.Request) {
-	filePath, err := helper.ImageConverterToPngFromJpg()
+	imageConverter, err := convertImage("jpeg")
 	if err != nil {
-		fmt.Fprintf(w, "Error opening file 1: %v", err)
+		fmt.Printf("Error when passed convert image: %v", err)
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"code":    http.StatusInternalServerError,
+			"message": "Sorry, something went wrong",
+		})
+		return
+	}
+
+	filePath, err := imageConverter.doConvert()
+	if err != nil {
+		fmt.Printf("Error convert file: %v", err)
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"code":    http.StatusInternalServerError,
+			"message": "Sorry, something went wrong",
+		})
 		return
 	}
 
 	file, err := os.Open(filePath)
 	if err != nil {
-		fmt.Fprintf(w, "Error opening file 2: %v - %s ", err, filePath)
+		fmt.Printf("Error opening file: %v", err)
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"code":    http.StatusInternalServerError,
+			"message": "Sorry, something went wrong",
+		})
 		return
 	}
 	defer file.Close()
 
 	fileByte, err := io.ReadAll(file)
 	if err != nil {
-		fmt.Fprintf(w, "Error read file 3: %v - %s", err, file.Name())
+		fmt.Printf("Error read byte file: %v", err)
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"code":    http.StatusInternalServerError,
+			"message": "Sorry, something went wrong",
+		})
 		return
 	}
 
