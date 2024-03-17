@@ -10,6 +10,7 @@ import (
 func main() {
 	r := mux.NewRouter()
 
+	r.HandleFunc("/", indexHandler).Methods("GET")
 	r.HandleFunc("/download", downloadFileHandler).Methods("GET")
 	srv := &http.Server{
 		Handler: r,
