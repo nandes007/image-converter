@@ -4,14 +4,14 @@ import (
 	"image"
 	"image/png"
 	"os"
+	"time"
 )
 
 type pngImage struct {
 }
 
-func (p *pngImage) doConvert() (string, error) {
-	filePath := "image/"
-	f, err := os.Open(filePath + "test.jpg")
+func (p *pngImage) doConvert(fileUploaded *fileUploaded) (string, error) {
+	f, err := os.Open(fileUploaded.location + "/" + fileUploaded.fileName)
 	if err != nil {
 		return "", err
 	}
@@ -21,7 +21,9 @@ func (p *pngImage) doConvert() (string, error) {
 		return "", err
 	}
 
-	f, err = os.Create(filePath + "jpg_to_png.png")
+	dateFormatted := time.Now().Format("20060102030405")
+	newFileName := dateFormatted + fileUploaded.onlyFilename + ".png"
+	f, err = os.Create(newFileName)
 	if err != nil {
 		return "", err
 	}

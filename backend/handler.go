@@ -29,7 +29,7 @@ func downloadFileHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	filePath, err := imageConverter.doConvert()
+	filePath, err := imageConverter.doConvert(&fileUploaded{})
 	if err != nil {
 		fmt.Printf("Error convert file: %v", err)
 		w.WriteHeader(http.StatusBadRequest)
@@ -119,5 +119,73 @@ func uploadFileHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func processHandler(w http.ResponseWriter, r *http.Request) {
+	convertTo := r.FormValue("convert_to")
+	uploadedFile, handler, err := r.FormFile("file")
+	if err != nil {
+		fmt.Fprintf(w, "Error retrieve file: %v", err)
+		return
+	}
+	defer uploadedFile.Close()
 
+	fileToUpload, err := uploadFile(uploadedFile, handler)
+	if err != nil {
+		fmt.Printf("Error upload file: %v", err)
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"code":    http.StatusInternalServerError,
+			"message": "Sorry, something went wrong",
+		})
+		return
+	}
+
+	imageConverter, err := convertImage(convertTo)
+	if err != nil {
+		fmt.Printf("Error when passed convert image: %v", err)
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"code":    http.StatusInternalServerError,
+			"message": "Sorry, something went wrong",
+		})
+		return
+	}
+
+	filePath, err := imageConverter.doConvert(fileToUpload)
+	if err != nil {
+		fmt.Printf("Error convert file: %v", err)
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"code":    http.StatusInternalServerError,
+			"message": "Sorry, something went wrong",
+		})
+		return
+	}
+
+	file, err := os.Open(filePath)
+	if err != nil {
+		fmt.Printf("Error opening file: %v", err)
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"code":    http.StatusInternalServerError,
+			"message": "Sorry, something went wrong",
+		})
+		return
+	}
+	defer file.Close()
+
+	fileByte, err := io.ReadAll(file)
+	if err != nil {
+		fmt.Printf("Error read byte file: %v", err)
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"code":    http.StatusInternalServerError,
+			"message": "Sorry, something went wrong",
+		})
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", http.DetectContentType(fileByte))
+	w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=%s", filepath.Base(filePath)))
+
+	http.ServeFile(w, r, filePath)
 }

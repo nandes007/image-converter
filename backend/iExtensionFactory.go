@@ -2,15 +2,22 @@ package main
 
 import "fmt"
 
+type fileUploaded struct {
+	fileName     string
+	extension    string
+	location     string
+	onlyFilename string
+}
+
 type iConverterFactory interface {
-	doConvert() (string, error)
+	doConvert(*fileUploaded) (string, error)
 }
 
 func convertImage(extensionType string) (iConverterFactory, error) {
-	if extensionType == ".png" {
+	if extensionType == "png" {
 		return &pngImage{}, nil
 	}
-	if extensionType == ".jpeg" {
+	if extensionType == "jpeg" {
 		return &jpegImage{}, nil
 	}
 	return nil, fmt.Errorf("wrong extension type passed")
