@@ -4,6 +4,7 @@ import (
 	"image"
 	"image/jpeg"
 	"os"
+	"path/filepath"
 	"time"
 )
 
@@ -11,7 +12,7 @@ type jpegImage struct {
 }
 
 func (j *jpegImage) doConvert(fileUploaded *fileUploaded) (string, error) {
-	f, err := os.Open(fileUploaded.location + "/" + fileUploaded.fileName)
+	f, err := os.Open(fileUploaded.fullPathFile)
 	if err != nil {
 		return "", err
 	}
@@ -23,8 +24,13 @@ func (j *jpegImage) doConvert(fileUploaded *fileUploaded) (string, error) {
 	}
 
 	dateFormatted := time.Now().Format("20060102030405")
-	newFileName := dateFormatted + fileUploaded.onlyFilename + ".jpeg"
-	f, err = os.Create(newFileName)
+	newFileName := dateFormatted + fileNameWithoutExtSliceNotation(fileUploaded.fileName) + ".jpeg"
+	fileLocation, err := getConvertedDirectory()
+	if err != nil {
+		return "", err
+	}
+
+	f, err = os.Create(filepath.Join(fileLocation, newFileName))
 	if err != nil {
 		return "", err
 	}

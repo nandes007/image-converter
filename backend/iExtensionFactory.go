@@ -4,9 +4,7 @@ import "fmt"
 
 type fileUploaded struct {
 	fileName     string
-	extension    string
-	location     string
-	onlyFilename string
+	fullPathFile string
 }
 
 type iConverterFactory interface {

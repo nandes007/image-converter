@@ -11,6 +11,23 @@ func fileNameWithoutExtSliceNotation(fileName string) string {
 	return fileName[:len(fileName)-len(filepath.Ext(fileName))]
 }
 
+func getConvertedDirectory() (string, error) {
+	dir, err := os.Getwd()
+	if err != nil {
+		return "", err
+	}
+
+	dirLocation := filepath.Join(dir, "converted_images")
+	if _, err := os.Stat(dirLocation); os.IsNotExist(err) {
+		err := os.Mkdir(dirLocation, 0750)
+		if err != nil {
+			return "", err
+		}
+	}
+
+	return dirLocation, nil
+}
+
 func uploadFile(uploadedFile multipart.File, handler *multipart.FileHeader) (*fileUploaded, error) {
 	dir, err := os.Getwd()
 	if err != nil {
@@ -26,7 +43,6 @@ func uploadFile(uploadedFile multipart.File, handler *multipart.FileHeader) (*fi
 	}
 
 	filename := handler.Filename
-	fileExtension := filepath.Ext(handler.Filename)
 	fileLocation := filepath.Join(dirLocation, filename)
 	targetFile, err := os.OpenFile(fileLocation, os.O_RDWR|os.O_CREATE, 0666)
 	if err != nil {
@@ -38,12 +54,10 @@ func uploadFile(uploadedFile multipart.File, handler *multipart.FileHeader) (*fi
 		return nil, err
 	}
 
-	onlyFilename := fileNameWithoutExtSliceNotation(filename)
+	fullPathFile := dirLocation + "/" + filename
 
 	return &fileUploaded{
 		fileName:     filename,
-		extension:    fileExtension,
-		location:     dirLocation,
-		onlyFilename: onlyFilename,
+		fullPathFile: fullPathFile,
 	}, nil
 }
