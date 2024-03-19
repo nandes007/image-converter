@@ -14,8 +14,22 @@ func main() {
 	r.HandleFunc("/download", downloadFileHandler).Methods("GET")
 	r.HandleFunc("/upload", uploadFileHandler).Methods("POST")
 	r.HandleFunc("/process", processHandler).Methods("POST")
+
+	// CORS middleware
+	cors := func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			// Set CORS headers
+			w.Header().Set("Access-Control-Allow-Origin", "*") // Allow requests from any origin
+			w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+			// w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+
+			// Proceed to the next middleware or handler
+			next.ServeHTTP(w, r)
+		})
+	}
+
 	srv := &http.Server{
-		Handler: r,
+		Handler: cors(r),
 		Addr:    ":9090",
 	}
 	log.Fatal(srv.ListenAndServe())
