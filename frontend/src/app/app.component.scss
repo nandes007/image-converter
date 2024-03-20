@@ -132,11 +132,42 @@ $file-input-padding: 1rem 4rem;
         }
 
         .preview-image {
-            max-width: 100%;
+            width: 17rem;
             max-height: 200px; /* Set maximum height for the preview image */
             border: 1px solid #ccc;
             border-radius: 4px;
             margin-top: 10px; /* Add margin to separate the preview image from the file input */
         }
+    }
+
+    .submit-button {
+        padding-top: 2rem;
+        display: flex;
+        justify-content: center;
+
+        .custom-button {
+            padding: 15px 40px;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff; /* Change color as needed */
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+          
+            &:hover {
+              background-color: #0056b3; /* Change hover color as needed */
+            }
+          
+            &:focus {
+              outline: none;
+              box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.3); /* Change focus style as needed */
+            }
+          
+            &:disabled {
+              opacity: 0.5;
+              cursor: not-allowed;
+            }
+          }
     }
 }

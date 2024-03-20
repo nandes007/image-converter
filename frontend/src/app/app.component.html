@@ -15,7 +15,8 @@
   <h5 class="title">Image Converter</h5>
   <div class="select-element">
     <div class="select-wrapper">
-      <select name="convert-to" id="convert-to">
+      <select name="convert-to" id="convert-to" [(ngModel)]="convertTo" [ngModelOptions]="{ standalone: true }">
+        <option value="" disabled>Please Select Option</option>
         <option value="jpeg">JPG TO JPEG</option>
         <option value="png">JPG TO PNG</option>
       </select>
@@ -29,6 +30,11 @@
         <img [src]="imageUrl" alt="Preview Image" class="preview-image">
       </div>
     </div>
+  </div>
+  <div *ngIf="imageUrl" class="submit-button">
+    <button class="custom-button">
+      Convert To 
+    </button>
   </div>
 </div>
 
