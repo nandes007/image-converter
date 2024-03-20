@@ -119,6 +119,17 @@ func uploadFileHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func processHandler(w http.ResponseWriter, r *http.Request) {
+	err := validateRequest(r)
+	if err != nil {
+		fmt.Printf("Validation error: %v", err)
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"code":    http.StatusUnprocessableEntity,
+			"message": err.Error(),
+		})
+		return
+	}
+
 	convertTo := r.FormValue("convert_to")
 	uploadedFile, handler, err := r.FormFile("file")
 	if err != nil {

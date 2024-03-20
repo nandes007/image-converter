@@ -1,6 +1,8 @@
 package main
 
-import "fmt"
+import (
+	"errors"
+)
 
 type fileUploaded struct {
 	fileName     string
@@ -18,5 +20,5 @@ func convertImage(extensionType string) (iConverterFactory, error) {
 	if extensionType == "jpeg" {
 		return &jpegImage{}, nil
 	}
-	return nil, fmt.Errorf("wrong extension type passed")
+	return nil, errors.New("wrong extension type passed")
 }

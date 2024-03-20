@@ -1,10 +1,13 @@
 package main
 
 import (
+	"errors"
 	"io"
 	"mime/multipart"
+	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 func fileNameWithoutExtSliceNotation(fileName string) string {
@@ -60,4 +63,24 @@ func uploadFile(uploadedFile multipart.File, handler *multipart.FileHeader) (*fi
 		fileName:     filename,
 		fullPathFile: fullPathFile,
 	}, nil
+}
+
+func validateRequest(r *http.Request) error {
+	trimmedStr := strings.TrimSpace(r.FormValue("convert_to"))
+	if trimmedStr == "" {
+		return errors.New("option is required")
+	}
+
+	err := r.ParseMultipartForm(10 << 20)
+	if err != nil {
+		return errors.New("10 MB miximum file size")
+	}
+
+	file, _, err := r.FormFile("file")
+	if err != nil {
+		return errors.New("file is required")
+	}
+
+	defer file.Close()
+	return nil
 }
