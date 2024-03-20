@@ -1,3 +1,13 @@
+$select-color: #333;
+$select-background: #f5f5f5;
+$select-border: 1px solid #ccc;
+$select-padding: 10px;
+
+$file-input-bg: #e63434;
+$file-input-color: #fbf6f6;
+$file-input-border: 1px solid red; // Change border color to red
+$file-input-padding: 1rem 4rem;
+
 .navbar {
     background-color: #fff;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -6,14 +16,10 @@
     justify-content: space-between;
     align-items: center;
 }
-  
-.navbar-brand {
-    font-weight: bold;
-    text-decoration: none;
-}
 
 .navbar-brand img {
-    height: 30px;  /* Adjust logo height as needed */
+    width: 100px;  /* Adjust logo height as needed */
+    height: 70px;  /* Adjust logo height as needed */
 }
 
 .nav-items {
@@ -24,7 +30,14 @@
 }
 
 .nav-item {
+    display: flex;
+    align-items: center;
     margin-right: 20px;
+}
+
+.nav-item img {
+    width: 30px;
+    height: 30px;
 }
 
 .nav-link {
@@ -40,9 +53,11 @@
 }
 
 .content {
-    padding-top: 4rem;
+    padding-top: 1rem;
     .title {
         text-align: center;
+        padding: 10px 0px;
+        font-size: 3rem;
     }
     h5 {
         margin-block-start: 0 !important;
@@ -51,13 +66,69 @@
         margin: 0;
     }
 
-    .convert-option {
+    .select-element {
         display: flex;
         justify-content: center;
+        .select-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 200px; /* Adjust width as needed */
+        }
+          
+        select {
+            width: 100%;
+            padding: $select-padding;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            background-color: $select-background;
+            color: $select-color;
+            border: $select-border;
+            appearance: none; /* Remove default styling */
+            outline: none; /* Remove active border */
+        }
+          
+          /* Arrow icon */
+        .select-wrapper::after {
+            content: '\25BC'; /* Unicode for down arrow */
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: $select-color;
+        }
     }
+    
 
-    .input-file {
+    .input-element {
         display: flex;
         justify-content: center;
+        padding-top: 2rem;
+
+        .file-input {
+            position: relative;
+            display: inline-block;
+        }
+          
+        .file-input__input {
+            position: absolute;
+            width: 0;
+            height: 0;
+            opacity: 0;
+            overflow: hidden;
+            z-index: -1;
+        }
+          
+        .file-input__label {
+            font-size: 30px;
+            display: inline-block;
+            padding: $file-input-padding;
+            background-color: $file-input-bg;
+            color: $file-input-color;
+            border: none; // Remove border from label
+            border-radius: 4px;
+            cursor: pointer;
+        }
     }
 }

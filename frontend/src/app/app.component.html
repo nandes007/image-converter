@@ -1,25 +1,31 @@
 <nav class="navbar">
-  <h2>{{ title }}</h2>
+  <div class="navbar-brand">
+    <img src="../assets/images/converter.png" alt="converter">
+  </div>
   <ul class="nav-items">
     <li class="nav-item">
-      <a class="nav-link" routerLink="/">Home</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" routerLink="/about">About</a>
+      <a class="nav-link" href="https://github.com/nandes007/image-converter" target="_blank">
+        <img src="../assets/images/github_icon.jpg" alt="github_icon">
+      </a>
     </li>
   </ul>
 </nav>
 
 <div class="content">
   <h5 class="title">Image Converter</h5>
-  <div class="convert-option">
-    <select name="convert-to" id="convert-to">
-      <option value="jpeg">JPG TO JPEG</option>
-      <option value="png">JPG TO PNG</option>
-    </select>
+  <div class="select-element">
+    <div class="select-wrapper">
+      <select name="convert-to" id="convert-to">
+        <option value="jpeg">JPG TO JPEG</option>
+        <option value="png">JPG TO PNG</option>
+      </select>
+    </div>
   </div>
-  <div class="input-file">
-    <input type="file">
+  <div class="input-element">
+    <div class="file-input">
+      <input type="file" id="fileInput" class="file-input__input">
+      <label for="fileInput" class="file-input__label">Choose a file</label>
+    </div>
   </div>
 </div>
 

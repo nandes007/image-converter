@@ -11,11 +11,12 @@ import { RouterOutlet } from '@angular/router';
 })
 
 export class AppComponent {
-  public title:string = 'frontend';
+  public title:string = "Image Converter";
+  public convertTo:string = "";
 
   public async testAxios() {
     try {
-      const response = await axios.get('http://localhost:9090');
+      const response = await axios.get("http://localhost:9090");
       console.log(response);
     } catch (error:any) {
       console.log(error);
