@@ -23,10 +23,13 @@
   </div>
   <div class="input-element">
     <div class="file-input">
-      <input type="file" id="fileInput" class="file-input__input">
+      <input type="file" id="fileInput" class="file-input__input" (change)="onFileSelected($event)">
       <label for="fileInput" class="file-input__label">Choose a file</label>
+      <div *ngIf="imageUrl">
+        <img [src]="imageUrl" alt="Preview Image" class="preview-image">
+      </div>
     </div>
   </div>
 </div>
 
-<router-outlet></router-outlet>
+<!-- <router-outlet></router-outlet> -->

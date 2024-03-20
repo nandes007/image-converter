@@ -1,11 +1,12 @@
 import axios from 'axios'
-import { Component } from '@angular/core';
+import { Component, NgModule } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import {CommonModule} from '@angular/common';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, CommonModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -13,17 +14,19 @@ import { RouterOutlet } from '@angular/router';
 export class AppComponent {
   public title:string = "Image Converter";
   public convertTo:string = "";
+  public imageUrl:string = "";
 
-  public async testAxios() {
-    try {
-      const response = await axios.get("http://localhost:9090");
-      console.log(response);
-    } catch (error:any) {
-      console.log(error);
-    }
+  public onFileSelected(event:any): void {
+    const file: File = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      this.imageUrl = e.target?.result as string;
+    };
+
+    reader.readAsDataURL(file);
   }
 
-  async ngOnInit() {
-    await this.testAxios()
+  ngOnInit() {
   }
 }
