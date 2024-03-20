@@ -14,6 +14,11 @@ func fileNameWithoutExtSliceNotation(fileName string) string {
 	return fileName[:len(fileName)-len(filepath.Ext(fileName))]
 }
 
+func getFileName(fileName string) string {
+	splitStr := strings.Split(fileName, "/")
+	return splitStr[len(splitStr)-1]
+}
+
 func getConvertedDirectory() (string, error) {
 	dir, err := os.Getwd()
 	if err != nil {

@@ -194,9 +194,35 @@ func processHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
-	w.Header().Set("Content-Type", http.DetectContentType(fileByte))
-	w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=%s", filepath.Base(filePath)))
+	// Set the Content-Disposition header to specify the filename and extension
+	// fileName := fileToUpload.fileName // Replace with the desired filename
+	fileName := getFileName(file.Name())
+	w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=%s", fileName))
 
-	http.ServeFile(w, r, filePath)
+	// Set the Content-Type header based on the file type
+	contentType := http.DetectContentType(fileByte)
+	w.Header().Set("Content-Type", contentType)
+
+	w.Header().Set("Access-Control-Expose-Headers", "Content-Disposition")
+
+	fmt.Println("Response Headers:", w.Header())
+
+	// Write the file content to the response body
+	_, err = w.Write(fileByte)
+	if err != nil {
+		fmt.Printf("Error when resturn response: %v", err)
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"code":    http.StatusInternalServerError,
+			"message": "Sorry, something went wrong",
+		})
+		return
+	}
+
+	// w.Header().Set("Content-Type", http.DetectContentType(fileByte))
+	// w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=%s", filepath.Base(filePath)))
+	// w.WriteHeader(http.StatusOK)
+	// w.Write(fileByte)
+
+	// http.ServeFile(w, r, filePath)
 }
