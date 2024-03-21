@@ -11,8 +11,6 @@ func main() {
 	r := mux.NewRouter()
 
 	r.HandleFunc("/", indexHandler).Methods("GET")
-	r.HandleFunc("/api/v1/download", downloadFileHandler).Methods("GET")
-	r.HandleFunc("/api/v1/upload", uploadFileHandler).Methods("POST")
 	r.HandleFunc("/api/v1/process", processHandler).Methods("POST")
 
 	// CORS middleware
