@@ -19,7 +19,6 @@
   <div class="select-element">
     <div class="select-wrapper">
       <select name="convert-to" id="convert-to" [(ngModel)]="convertTo" [ngModelOptions]="{ standalone: true }">
-        <option value="" disabled>Please Select Option</option>
         <option value="jpeg">JPG TO JPEG</option>
         <option value="png">JPG TO PNG</option>
       </select>
@@ -27,7 +26,7 @@
   </div>
   <div class="input-element">
     <div class="file-input">
-      <input type="file" id="fileInput" class="file-input__input" (change)="onFileSelected($event)">
+      <input type="file" id="fileInput" class="file-input__input" (change)="onFileSelected($event)" accept=".jpg">
       <label for="fileInput" class="file-input__label">Choose a file</label>
       <div *ngIf="imageUrl">
         <img [src]="imageUrl" alt="Preview Image" class="preview-image">

@@ -22,7 +22,7 @@ import { ErrorMessageComponent } from './components/error-message/error-message.
 })
 
 export class AppComponent {
-  public convertTo:string = "";
+  public convertTo:string = "png";
   public imageUrl:string = "";
   public imageToConvert: File = new File([], 'empty.txt', { type: 'text/plain' });
   public errorMessage:string = "";
