@@ -1,23 +1,32 @@
-import axios, { AxiosRequestConfig } from 'axios'
+import axios from 'axios'
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import {CommonModule} from '@angular/common';
-import { environment } from '../environments/environment';
 import { FormsModule } from '@angular/forms';
+import {CommonModule} from '@angular/common';
+import { RouterOutlet } from '@angular/router';
+import { environment } from '../environments/environment';
+import { LoadingComponent } from './components/loading/loading.component';
+import { ErrorMessageComponent } from './components/error-message/error-message.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CommonModule, FormsModule],
+  imports: [
+    RouterOutlet,
+    CommonModule,
+    FormsModule,
+    ErrorMessageComponent,
+    LoadingComponent
+  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
 
 export class AppComponent {
-  public title:string = "Image Converter";
   public convertTo:string = "";
   public imageUrl:string = "";
   public imageToConvert: File = new File([], 'empty.txt', { type: 'text/plain' });
+  public errorMessage:string = "";
+  public isSubmit:boolean = false;
 
   public onFileSelected(event:any): void {
     const file: File = event.target.files[0];
@@ -32,6 +41,7 @@ export class AppComponent {
   }
 
   public async doConvert() {
+    this.isSubmit = true;
     try {
       const formData = new FormData();
       formData.append('file', this.imageToConvert);
@@ -39,18 +49,12 @@ export class AppComponent {
       const response = await axios.post(`${environment.apiUrl}/api/v1/process`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
-        },
-        responseType: 'blob'
+        }
       });
-      console.log(response.headers);
-
-      // Log response headers
-      console.log('Response Headers:', response.headers);
 
       // Extract filename from Content-Disposition header
       let filename = 'downloaded-file';
       const contentDispositionHeader = response.headers['content-disposition'];
-      console.log(contentDispositionHeader);
       if (contentDispositionHeader) {
           const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
           const matches = filenameRegex.exec(contentDispositionHeader);
@@ -69,12 +73,17 @@ export class AppComponent {
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
+      
+      this.isSubmit = false;
     } catch (error:any) {
-      console.log(error);
+      this.isSubmit = false;
+      this.errorMessage = error.response.data.message;
+      setTimeout(() => {
+        this.errorMessage = "";
+      }, 3000);
     }
   }
 
   ngOnInit() {
-    console.log(environment);
   }
 }

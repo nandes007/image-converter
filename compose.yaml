@@ -6,4 +6,3 @@ services:
       - 9090:9090
     volumes:
       - ./backend/converted_images:/go/src/app/converted_images
-      - ./backend/files:/go/src/app/files

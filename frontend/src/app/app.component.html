@@ -11,6 +11,9 @@
   </ul>
 </nav>
 
+<app-error-message *ngIf="errorMessage" [errorMessage]="errorMessage"></app-error-message>
+<app-loading *ngIf="isSubmit" [isLoading]="isSubmit"></app-loading>
+
 <div class="content">
   <h5 class="title">Image Converter</h5>
   <div class="select-element">

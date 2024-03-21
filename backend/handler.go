@@ -20,6 +20,7 @@ func processHandler(w http.ResponseWriter, r *http.Request) {
 	err := validateRequest(r)
 	if err != nil {
 		fmt.Printf("Validation error: %v", err)
+		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(map[string]interface{}{
 			"code":    http.StatusUnprocessableEntity,
@@ -32,6 +33,12 @@ func processHandler(w http.ResponseWriter, r *http.Request) {
 	uploadedFile, handler, err := r.FormFile("file")
 	if err != nil {
 		fmt.Fprintf(w, "Error retrieve file: %v", err)
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"code":    http.StatusUnprocessableEntity,
+			"message": err.Error(),
+		})
 		return
 	}
 	defer uploadedFile.Close()
@@ -40,6 +47,7 @@ func processHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Printf("Error upload file: %v", err)
 		w.WriteHeader(http.StatusBadRequest)
+		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(map[string]interface{}{
 			"code":    http.StatusInternalServerError,
 			"message": "Sorry, something went wrong",
@@ -51,6 +59,7 @@ func processHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Printf("Error when passed convert image: %v", err)
 		w.WriteHeader(http.StatusBadRequest)
+		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(map[string]interface{}{
 			"code":    http.StatusInternalServerError,
 			"message": "Sorry, something went wrong",
@@ -62,6 +71,7 @@ func processHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Printf("Error convert file: %v", err)
 		w.WriteHeader(http.StatusBadRequest)
+		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(map[string]interface{}{
 			"code":    http.StatusInternalServerError,
 			"message": "Sorry, something went wrong",
@@ -73,6 +83,7 @@ func processHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Printf("Error opening file: %v", err)
 		w.WriteHeader(http.StatusBadRequest)
+		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(map[string]interface{}{
 			"code":    http.StatusInternalServerError,
 			"message": "Sorry, something went wrong",
@@ -85,6 +96,7 @@ func processHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Printf("Error read byte file: %v", err)
 		w.WriteHeader(http.StatusBadRequest)
+		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(map[string]interface{}{
 			"code":    http.StatusInternalServerError,
 			"message": "Sorry, something went wrong",
@@ -97,15 +109,13 @@ func processHandler(w http.ResponseWriter, r *http.Request) {
 
 	contentType := http.DetectContentType(fileByte)
 	w.Header().Set("Content-Type", contentType)
-
 	w.Header().Set("Access-Control-Expose-Headers", "Content-Disposition")
-
-	fmt.Println("Response Headers:", w.Header())
 
 	_, err = w.Write(fileByte)
 	if err != nil {
 		fmt.Printf("Error when resturn response: %v", err)
 		w.WriteHeader(http.StatusBadRequest)
+		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(map[string]interface{}{
 			"code":    http.StatusInternalServerError,
 			"message": "Sorry, something went wrong",

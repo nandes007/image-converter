@@ -1,0 +1,13 @@
+.error-section {
+    display: flex;
+    justify-content: center;
+    padding-top: 1rem;
+
+    span {
+        border: none;
+        border-radius: 4px;
+        padding: 10px 20%;
+        background-color: red;
+        color: white;
+    }
+}
