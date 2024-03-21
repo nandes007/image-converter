@@ -1,8 +1,14 @@
 services:
-  app:
+  backend:
     build:
       context: ./backend
     ports:
       - 9090:9090
     volumes:
       - ./backend/converted_images:/go/src/app/converted_images
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - 4200:4200

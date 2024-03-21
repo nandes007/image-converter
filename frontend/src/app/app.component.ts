@@ -42,46 +42,63 @@ export class AppComponent {
 
   public async doConvert() {
     this.isSubmit = true;
+    const formData = new FormData();
+    formData.append('file', this.imageToConvert);
+    formData.append('convert_to', this.convertTo);
     try {
-      const formData = new FormData();
-      formData.append('file', this.imageToConvert);
-      formData.append('convert_to', this.convertTo);
       const response = await axios.post(`${environment.apiUrl}/api/v1/process`, formData, {
         headers: {
-          'Content-Type': 'multipart/form-data'
-        }
+          'Content-Type': 'multipart/form-data',
+          Accept: 'application/json'
+        },
+        responseType: 'blob'
       });
 
       // Extract filename from Content-Disposition header
-      let filename = 'downloaded-file';
-      const contentDispositionHeader = response.headers['content-disposition'];
-      if (contentDispositionHeader) {
-          const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-          const matches = filenameRegex.exec(contentDispositionHeader);
-          if (matches && matches.length > 1) {
-              filename = decodeURIComponent(matches[1].replace(/['"]/g, ''));
-          }
-      }
-
-      // Create a blob URL and initiate the file download
-      const blob = new Blob([response.data], { type: response.headers['content-type'] });
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', filename);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
-      
-      this.isSubmit = false;
+      const filename = this.extractFilenameFromResponse(response);
+      this.downloadFile(response, filename);
     } catch (error:any) {
+      console.log(error);
       this.isSubmit = false;
       this.errorMessage = error.response.data.message;
       setTimeout(() => {
         this.errorMessage = "";
       }, 3000);
     }
+  }
+
+  private extractFilenameFromResponse(response: any): string {
+    // Extract filename from Content-Disposition header
+    let filename = 'downloaded-file';
+    const contentDispositionHeader = response.headers['content-disposition'];
+    if (contentDispositionHeader) {
+      const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+      const matches = filenameRegex.exec(contentDispositionHeader);
+      if (matches && matches.length > 1) {
+        filename = decodeURIComponent(matches[1].replace(/['"]/g, ''));
+      }
+    }
+    return filename;
+  }
+
+  private downloadFile(response: any, filename: string): void {
+    // Create a blob URL and initiate the file download
+    const blob = new Blob([response.data], { type: response.headers['content-type'] });
+    const link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    link.download = filename;
+    link.click();
+
+    // const url = window.URL.createObjectURL(blob);
+    // const link = document.createElement('a');
+    // link.href = url;
+    // link.setAttribute('download', filename);
+    // document.body.appendChild(link);
+    // link.click();
+    // document.body.removeChild(link);
+    // window.URL.revokeObjectURL(url);
+    
+    this.isSubmit = false;
   }
 
   ngOnInit() {

@@ -3,7 +3,7 @@
 ARG GO_VERSION=1.22
 FROM golang:${GO_VERSION}-alpine
 ENV GO_ENV production
-WORKDIR /go/src/app
+WORKDIR /usr/src/backend
 # Download Go modules
 COPY go.mod go.sum ./
 RUN go mod download
