@@ -10,8 +10,6 @@ This is the documentation for the Image Converter project, a tool for converting
    - [Prerequisites](#prerequisites)
    - [Setting Up the Application](#setting-up-the-application)
 4. [Usage](#usage)
-5. [Contributing](#contributing)
-6. [License](#license)
 
 ## Introduction
 
@@ -29,13 +27,25 @@ The Image Converter project provides a simple web-based interface for users to u
 
 Before installing the Image Converter, ensure you have the following prerequisites installed:
 
-- Docker
+- [Install Go](https://go.dev/dl/)
+- [Install Angular CLI](https://angular.io/cli)
+- [Install Docker](https://docs.docker.com/desktop/)
 - Docker Compose
 - Git
 
 ### Setting Up the Application
 
 1. Clone the repository:
+```
+git clone https://github.com/nandes007/image-converter.git
+```
 
-   ```bash
-   git clone https://github.com/your-username/image-converter.git
+2. Build and run project using docker compose
+```
+cd image-converter       # Enter to project
+
+docker compose up -d     # Run project in background using docker compose
+```
+
+### Usage
+To use the Image Converter, simply open your web browser and navigate to http://localhost:4200. You can then upload JPEG/JPG images using the provided interface and convert them to PNG format.
