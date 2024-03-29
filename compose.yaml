@@ -12,6 +12,7 @@ services:
       context: ./frontend
     ports:
       - 8081:80
+    mem_limit: 2g
     # volumes:
     #   - ./frontend:/usr/src/fronted
     #   - /usr/src/fronted/node_modules
