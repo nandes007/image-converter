@@ -11,7 +11,7 @@ services:
     build:
       context: ./frontend
     ports:
-      - 4200:4200
-    volumes:
-      - ./frontend:/usr/src/fronted
-      - /usr/src/fronted/node_modules
+      - 8081:80
+    # volumes:
+    #   - ./frontend:/usr/src/fronted
+    #   - /usr/src/fronted/node_modules
