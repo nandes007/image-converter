@@ -10,9 +10,9 @@ services:
   frontend:
     build:
       context: ./frontend
+      dockerfile: Dockerfile
     ports:
       - 8081:80
-    mem_limit: 2g
     # volumes:
-    #   - ./frontend:/usr/src/fronted
-    #   - /usr/src/fronted/node_modules
+    #   - ./frontend:/usr/src/app/fronted
+    #   - /usr/src/app/fronted/node_modules

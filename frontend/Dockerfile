@@ -1,13 +1,10 @@
-FROM node:21 as builder
-WORKDIR /usr/src/fronted
-COPY package*.json .
-RUN npm install -g @angular/cli
+FROM node:21-alpine AS build
+WORKDIR /usr/src/app
+COPY package*.json ./
 RUN npm install
+RUN npx ngcc --properties es2023 browser module main --first-only --create-ivy-entry-points
 COPY . .
-RUN ng build --configuration=production
-
-FROM nginx:alpine
-COPY --from=builder /usr/src/fronted/dist/frontend/browser /usr/share/nginx/html
+RUN npm run build
+FROM nginx:stable
+COPY --from=build /usr/src/app/dist/frontend/browser /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/nginx.conf
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]

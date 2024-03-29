@@ -1,0 +1,14 @@
+FROM node:21 as builder
+WORKDIR /usr/src/fronted
+RUN npm cache clean --force
+COPY package*.json .
+RUN npm install -g @angular/cli
+RUN npm install
+COPY . .
+RUN ng build --configuration=production
+
+FROM nginx:alpine
+COPY --from=builder /usr/src/fronted/dist/frontend/browser /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/nginx.conf
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
