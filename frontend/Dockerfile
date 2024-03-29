@@ -1,7 +1,8 @@
 FROM node:21-alpine AS build
 WORKDIR /usr/src/app
 COPY package*.json ./
-RUN npm ci
+RUN npm cache clean --force
+RUN npm install
 RUN npx ngcc --properties es2023 browser module main --first-only --create-ivy-entry-points
 COPY . .
 RUN npm run build
