@@ -7,12 +7,12 @@ services:
     volumes:
       - ./backend/converted_images:/go/src/app/converted_images
 
-  # frontend:
-  #   build:
-  #     context: ./frontend
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - 8081:80
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - 8081:80
     # volumes:
     #   - ./frontend:/usr/src/app/fronted
     #   - /usr/src/app/fronted/node_modules
