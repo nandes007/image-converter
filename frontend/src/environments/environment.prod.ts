@@ -1,3 +1,3 @@
 export const environment = {
-    apiUrl: 'converter-backend.ninedaystech.com'
+    apiUrl: 'https://converter-backend.ninedaystech.com'
 };
