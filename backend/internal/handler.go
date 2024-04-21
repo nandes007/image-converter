@@ -1,4 +1,4 @@
-package main
+package internal
 
 import (
 	"encoding/json"
@@ -6,9 +6,11 @@ import (
 	"io"
 	"net/http"
 	"os"
+
+	"github.com/nandes007/image-converter/pkg"
 )
 
-func indexHandler(w http.ResponseWriter, _ *http.Request) {
+func IndexHandler(w http.ResponseWriter, _ *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(map[string]interface{}{
 		"status": "OK",
@@ -16,8 +18,8 @@ func indexHandler(w http.ResponseWriter, _ *http.Request) {
 	})
 }
 
-func processHandler(w http.ResponseWriter, r *http.Request) {
-	err := validateRequest(r)
+func ProcessHandler(w http.ResponseWriter, r *http.Request) {
+	err := pkg.ValidateRequest(r)
 	if err != nil {
 		fmt.Printf("Validation error: %v", err)
 		w.Header().Set("Content-Type", "application/json")
@@ -104,7 +106,7 @@ func processHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fileName := getFileName(file.Name())
+	fileName := pkg.GetFileName(file.Name())
 	w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=%s", fileName))
 
 	contentType := http.DetectContentType(fileByte)

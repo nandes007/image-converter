@@ -1,21 +1,24 @@
-package main
+package internal
 
 import (
 	"image"
-	"image/png"
+	"image/jpeg"
 	"os"
 	"path/filepath"
 	"time"
+
+	"github.com/nandes007/image-converter/pkg"
 )
 
-type pngImage struct {
+type jpegImage struct {
 }
 
-func (p *pngImage) doConvert(fileUploaded *fileUploaded) (string, error) {
+func (j *jpegImage) doConvert(fileUploaded *fileUploaded) (string, error) {
 	f, err := os.Open(fileUploaded.fullPathFile)
 	if err != nil {
 		return "", err
 	}
+	defer f.Close()
 
 	img, _, err := image.Decode(f)
 	if err != nil {
@@ -23,8 +26,8 @@ func (p *pngImage) doConvert(fileUploaded *fileUploaded) (string, error) {
 	}
 
 	dateFormatted := time.Now().Format("20060102030405")
-	newFileName := dateFormatted + fileNameWithoutExtSliceNotation(fileUploaded.fileName) + ".png"
-	fileLocation, err := getConvertedDirectory()
+	newFileName := dateFormatted + pkg.FileNameWithoutExtSliceNotation(fileUploaded.fileName) + ".jpeg"
+	fileLocation, err := pkg.GetConvertedDirectory()
 	if err != nil {
 		return "", err
 	}
@@ -33,9 +36,12 @@ func (p *pngImage) doConvert(fileUploaded *fileUploaded) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	defer f.Close()
 
-	err = png.Encode(f, img)
+	opt := jpeg.Options{
+		Quality: 30,
+	}
+
+	err = jpeg.Encode(f, img, &opt)
 	if err != nil {
 		return "", err
 	}
