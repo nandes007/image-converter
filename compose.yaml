@@ -2,7 +2,7 @@ services:
   backend:
     build:
       context: ./backend
-    image: nandes009/my-image-converter-backend:latest
+    # image: nandes009/my-image-converter-backend:latest
     ports:
       - 9090:9090
     volumes:
@@ -12,6 +12,6 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    image: nandes009/my-image-converter-frontend
+    # image: nandes009/my-image-converter-frontend
     ports:
       - 8081:80
